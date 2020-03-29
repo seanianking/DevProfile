@@ -7,14 +7,14 @@
 
 //**Required Dependencies **/
 const inquirer = require("inquirer");
-const generateHTML = require("./generateHTML.js");
+const createHTML = require("./generateHTML.js");
 const fs = require("fs");
 const util = require("util");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
-const asyncProcess = util.promisify(fs.writeFile);
+const asyncWriter = util.promisify(fs.writeFile);
 
-function init();
+// function init();
 
 //Inquirer questions:
 function getDataInput(){
@@ -22,13 +22,17 @@ inquirer.prompt([{
     type: "input",
     name: "username",
     message: "GitHub username please:"
-}, {
+}, 
+
+{
     type: "list",
     message: "Pick a color, ANY color... out of these four:",
     name: "color",
     choices: ["green", "blue", "red", "pink"]
+
 }])
-return color, username;
+
+return username, color;
 };
 
 //Pull information with GitHub's API via axios call.
@@ -44,19 +48,48 @@ async function init(){
         const {color} = await getDataInput();
         let getStar = await getAxiosData(profile);
         let {data} = await getAxiosData(profile);
-        let starCount = getStar.data.lengthl
+        let starCount = getStar.data.length
         data.color = color;
         data.starCount = starCount;
 
-        const generator = createHTML(data);
-        asyncProcess("first.html", generator).then(function(){
+        const generator = createHTML(profile);
+        asyncWriter("first.html", generator).then(function(){
             console.log("Congrats, you did it!");
         });
         //call function that gets the pdf
+        getPDF();
     } catch (err) {
             console.log(err);
     } 
 }
+
+async function getPDF() {
+    try {
+      const browser = await puppeteer.launch();
+      const page = await browser.newPage();
+      await page.goto(
+        "file:" + __dirname,
+        console.log(__dirname),
+        {
+          waitUntil: "networkidle2"
+        }
+      );  
+      await page.pdf({
+        path: `${profile}.pdf`,
+        pageRanges: "1",
+        format: "A4",
+        printBackground: true
+      });
+      await browser.close();
+      console.log(`PDF Created at ${profile}.pdf`);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
+init();
+
+
 
 
 // function writeToFile(fileName, data) {

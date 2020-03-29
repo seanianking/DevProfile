@@ -234,4 +234,4 @@ function createHTML (data) {
       </body>`;
   }
 
-module.exports = generateHTML;
+module.exports = createHTML;
