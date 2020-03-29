@@ -34,12 +34,29 @@ return color, username;
 //Pull information with GitHub's API via axios call.
 function getAxiosData(username){
     const profile = axios.get(`https://api.github.com/users/${username}`);
-    const starCount = axios.get(`https://api.github.com/users/${username}/starred`);
-    console.log(starCount);
-    return profile, starCount;
+    const getStar = axios.get(`https://api.github.com/users/${username}/starred`);
+    return profile, getStar;
 };
 
+async function init(){
+    try {
+        let {profile} = await getAxiosData();
+        const {color} = await getDataInput();
+        let getStar = await getAxiosData(profile);
+        let {data} = await getAxiosData(profile);
+        let starCount = getStar.data.lengthl
+        data.color = color;
+        data.starCount = starCount;
 
+        const generator = createHTML(data);
+        asyncProcess("first.html", generator).then(function(){
+            console.log("Congrats, you did it!");
+        });
+        //call function that gets the pdf
+    } catch (err) {
+            console.log(err);
+    } 
+}
 
 
 // function writeToFile(fileName, data) {
