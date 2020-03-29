@@ -54,7 +54,7 @@ async function init(){
 
         const generator = createHTML(profile);
         asyncWriter("first.html", generator).then(function(){
-            console.log("Congrats, you did it!");
+            console.log("Congrats, it's an HTML!");
         });
         //call function that gets the pdf
         getPDF();
@@ -69,10 +69,7 @@ async function getPDF() {
       const page = await browser.newPage();
       await page.goto(
         "file:" + __dirname,
-        console.log(__dirname),
-        {
-          waitUntil: "networkidle2"
-        }
+        console.log(__dirname), {waitUntil: "networkidle2"}
       );  
       await page.pdf({
         path: `${profile}.pdf`,
