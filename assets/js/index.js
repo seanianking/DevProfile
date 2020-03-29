@@ -7,12 +7,14 @@
 
 //**Required Dependencies **/
 const inquirer = require("inquirer");
-const generateHTML = require("./generateHTML");
+const generateHTML = require("./generateHTML.js");
 const fs = require("fs");
 const util = require("util");
 const axios = require("axios");
 const puppeteer = require("puppeteer");
 const asyncProcess = util.promisify(fs.writeFile);
+
+function init();
 
 //Inquirer questions:
 function getDataInput(){
@@ -22,24 +24,28 @@ inquirer.prompt([{
     message: "GitHub username please:"
 }, {
     type: "list",
-    message: "Pick a color, ANY color out of these four:",
+    message: "Pick a color, ANY color... out of these four:",
     name: "color",
     choices: ["green", "blue", "red", "pink"]
 }])
 return color, username;
 };
 
+//Pull information with GitHub's API via axios call.
 function getAxiosData(username){
     const profile = axios.get(`https://api.github.com/users/${username}`);
     const starCount = axios.get(`https://api.github.com/users/${username}/starred`);
+    console.log(starCount);
     return profile, starCount;
 };
 
 
-function writeToFile(fileName, data) {
+
+
+// function writeToFile(fileName, data) {
  
-}
+// }
 
-function init() {
+// function init() {
 
-init();
+// init();
