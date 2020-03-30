@@ -11,10 +11,11 @@ const createHTML = require("./generateHTML.js");
 const fs = require("fs");
 const util = require("util");
 const axios = require("axios");
-const puppeteer = require("puppeteer");
+// const puppeteer = require("puppeteer");
 const asyncWriter = util.promisify(fs.writeFile);
+const pdf = require("html-pdf")
 
-// function init();
+init();
 
 //Inquirer questions:
 // function getDataInput(){
@@ -86,7 +87,6 @@ async function init() {
     // let starCount = getStar.data.length
     // data.color = color;
     // data.starCount = starCount;
-
     const generator = createHTML(profile.data);
     asyncWriter(`${username}.html`, generator).then(function(){
         console.log("Congrats, it's an HTML!");
@@ -99,28 +99,40 @@ async function init() {
   }
 }
 
-async function getPDF(profile) {
-  try {
-    const browser = await puppeteer.launch();
-    const page = await browser.newPage();
-    await page.goto(
-      "file:" + __dirname,
-      console.log(__dirname), { waitUntil: "networkidle2" }
-    );
-    await page.pdf({
-      path: `${profile}.pdf`,
-      pageRanges: "1",
-      format: "A4",
-      printBackground: true
-    });
-    await browser.close();
-    console.log(`PDF Created at ${profile}.pdf`);
-  } catch (err) {
-    console.log(err);
-  }
-}
+// async function getPDF(profile) {
+//   try {
+//     const browser = await puppeteer.launch();
+//     const page = await browser.newPage();
+//     await page.goto(
+//       "file:" + __dirname,
+//       console.log(__dirname), { waitUntil: "networkidle2" }
+//     );
+//     const dimensions = await page.evaluate(() =>{
+//       return {
+//         width: document.documentElement.clientWidth,
+//         height: document.documentElement.clientHeight,
+//         deviceScaleFactor: window.devicePixelRatio
+//       }
+      
+//     })
+//     console.log("Dimensions", dimensions)
+//     await page.pdf({
+//       path: `${profile}.pdf`,
+//       pageRanges: "1",
+//       format: "A4",
+//       printBackground: true
+//     });
+//     await browser.close();
+//     console.log(`PDF Created at ${profile}.pdf`);
+//   } catch (err) {
+//     console.log(err);
+//   }
+// }
 
-init();
+function getPDF(html, username) {
+  pdf.create(html).toFile(`${username}.pdf`, function(err, res){
+    console.log(res.filename);
+  });  }
 
 
 
