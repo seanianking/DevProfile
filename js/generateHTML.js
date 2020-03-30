@@ -179,7 +179,7 @@ function createHTML (data) {
       
         <div class="photo-header">
           <img src="${data.avatar_url}" alt="Profile Picture">
-          <h1>Hi!</h1>
+          <h1>Greetings!</h1>
           <h1>My name is ${data.name}</h1>
           <h2>Currently at ${data.company}</h2>
           <ul class="links-nav">

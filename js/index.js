@@ -92,14 +92,14 @@ async function init() {
         console.log("Congrats, it's an HTML!");
     });
     // call function that gets the pdf
-    getPDF(generator, username);
+    getPDF(generator, profile);
 
   } catch (err) {
     console.log(err);
   }
 }
 
-async function getPDF() {
+async function getPDF(profile) {
   try {
     const browser = await puppeteer.launch();
     const page = await browser.newPage();
